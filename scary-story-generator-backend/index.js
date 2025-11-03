@@ -209,19 +209,21 @@ async function generateImageWithGemini(prompt) {
             contents,
           });
 
+          let lastText = "";
+
           for await (const chunk of stream) {
-            if (!chunk.candidates || !chunk.candidates[0]) continue;
-
-            const parts = chunk.candidates[0]?.content?.parts || [];
-
-            if (parts[0] && parts[0].inlineData) {
-              const inlineData = parts[0].inlineData;
-              const buffer = Buffer.from(inlineData.data || "", "base64");
-              const b64Data = buffer.toString("base64");
-
-              return { type: "base64", base64: b64Data };
+            const candidate = chunk?.candidates?.[0]?.content;
+            if (candidate?.parts && Array.isArray(candidate.parts)) {
+              for (const part of candidate.parts) {
+                if (part?.inlineData?.data) {
+                  return { type: "base64", base64: part.inlineData.data };
+                }
+                if (part?.text) lastText += part.text;
+              }
             }
+            if (chunk?.text) lastText += chunk.text;
           }
+          if (lastText) return { type: "text", text: lastText };
           throw new Error("Empty SDK image/text stream");
         })();
 
