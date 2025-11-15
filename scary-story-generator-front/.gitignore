@@ -24,3 +24,6 @@ dist-ssr
 *.sw?
 
 .granite
+
+# Ignore local AI tool config used by the app
+scary-story-generator.ait
