@@ -346,7 +346,16 @@ app.post("/api/generate", async (req, res) => {
 
     const story = await generateStoryWithGemini(storyPrompt);
 
-    const imagePrompt = `${story}는 무서운 이야기입니다. 한장의 이미지로 이야기를 느낄 수 있게 중요한 대목을 무서운 분위기의 대표 이미지로 만들어주세요., 어두운 색감, cinematic lighting, high detail`;
+    const imagePrompt = `Based on the ${story}, generate an image following the instructions below. 
+                          Descriptive (Composition + Atmosphere)
+                          Express the climax of the story and its most unsettling scene through a single, powerful image. 
+                          The spatial setting of the image is Korea. 
+                          Position the focal subject (the protagonist or a single ominous object) in the foreground with shallow depth of field. 
+                          Place threatening elements (shadow-like figures / broken mirrors / abandoned carriages / bloodstained letters) at a slight angle. 
+                          Use a cold, low-saturation palette with deep navy shadows and subtle crimson accents. 
+                          Employ dramatic cinematic lighting (low-key, rim light, diffuse fog/haze) with high detail in facial expressions and textures (wet hair, frayed fabric, weathered wood, cracked glass). Add subtle atmospheric particles (dust, mist) and directional beams piercing the darkness to heighten tension. 
+                          Photorealistic rendering; never use text or watermarks.`;
+
     const imageResult = await generateImageWithGemini(imagePrompt);
 
     // do NOT persist image to disk — return a data URL for the frontend to display directly
