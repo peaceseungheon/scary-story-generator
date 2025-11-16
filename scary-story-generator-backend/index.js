@@ -340,21 +340,42 @@ app.post("/api/generate", async (req, res) => {
 
     const sanitized = keywords.slice(0, 10);
 
-    const storyPrompt = `다음 키워드들을 사용해 한국어로 무서운 단편 소설을 작성해 주세요. 제목이 있어야 하며, 글자수는 약 500~800자 내외로, 분위기는 음산하고 긴장감 있고 아주 오싹해야 합니다. 이야기에 짜임새가 있어야 합니다. 키워드들을 자연스럽게 포함하세요. 키워드: ${sanitized.join(
-      ", "
-    )}`;
+    const storyPrompt = `
+    당신은 무서운 이야기를 전문적으로 만드는 스토리텔러입니다. 
+    키워드: ${sanitized.join(", ")}.
+    위 키워드를 이용해 친구에게 직접 경험담을 들려주듯 생생하고 몰입감 있는 무서운 이야기를 작성해주세요.
+
+    [이야기 작성 가이드라인]
+    - 말투: 친구에게 썰을 푸는 것처럼 자연스럽고 구어체적인 표현 사용 (예: "그래서 말이야", "진짜 소름 돋았던 게", "근데 있잖아")
+    - 구조: 명확한 기승전결 구조
+      * 기: 평범한 일상에서 시작, 배경과 상황 설정
+      * 승: 이상한 징조와 불안감 증폭
+      * 전: 예상치 못한 반전이나 충격적인 사건 발생
+      * 결: 여운을 남기는 결말 (열린 결말 또는 섬뜩한 마무리)
+    - 길이: 800-1200자 내외
+    - 필수 요소:
+      * 구체적인 시간, 장소 묘사로 현실감 부여
+      * 오감을 자극하는 세밀한 묘사 (소리, 냄새, 온도, 감촉 등)
+      * 점진적으로 고조되는 긴장감
+      * 최소 2-3개의 깜짝 놀랄 수 있는 반전 포인트
+      * 섬뜩한 디테일과 복선
+      * 독자가 공감할 수 있는 공포 요소 (어둠, 고립, 정체불명의 존재 등)
+    `;
 
     const story = await generateStoryWithGemini(storyPrompt);
 
-    const imagePrompt = `Based on the ${story}, generate an image following the instructions below. 
-                          Descriptive (Composition + Atmosphere)
-                          Express the climax of the story and its most unsettling scene through a single, powerful image. 
-                          The spatial setting of the image is Korea. 
-                          Position the focal subject (the protagonist or a single ominous object) in the foreground with shallow depth of field. 
-                          Place threatening elements (shadow-like figures / broken mirrors / abandoned carriages / bloodstained letters) at a slight angle. 
-                          Use a cold, low-saturation palette with deep navy shadows and subtle crimson accents. 
-                          Employ dramatic cinematic lighting (low-key, rim light, diffuse fog/haze) with high detail in facial expressions and textures (wet hair, frayed fabric, weathered wood, cracked glass). Add subtle atmospheric particles (dust, mist) and directional beams piercing the darkness to heighten tension. 
-                          Photorealistic rendering; never use text or watermarks.`;
+    const imagePrompt = `
+        이야기: ${story}.
+        당신은 무서운 이야기의 핵심 장면을 시각화하는 이미지 생성 전문가입니다.
+        제공된 이야기의 특정 장면을 공포 영화의 한 장면처럼 생성해주세요.
+
+        [이미지 생성 가이드라인]
+        - 스타일: 사실적이면서도 영화적인 공포 분위기 (cinematic horror, dark atmosphere)
+        - 구도: 긴장감을 극대화하는 앵글과 구도
+        - 조명: 어둡고 불안한 조명, 강한 명암 대비
+        - 색감: 채도가 낮고 차가운 색조 (desaturated, cold tones)
+        - 디테일: 섬뜩한 디테일과 질감 강조
+    `;
 
     const imageResult = await generateImageWithGemini(imagePrompt);
 
