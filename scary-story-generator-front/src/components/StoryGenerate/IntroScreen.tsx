@@ -1,4 +1,5 @@
-import { Button, TextField } from "@toss/tds-mobile";
+import { TextField, Modal, Button } from "@toss/tds-mobile";
+import { useState } from "react";
 
 interface IntroScreenProps {
   currentKeyword: string;
@@ -21,13 +22,29 @@ export const IntroScreen = ({
   onKeyPress,
   onSubmit,
 }: IntroScreenProps) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   return (
-    <div style={{ padding: "24px", maxWidth: "600px", margin: "0 auto" }}>
-      <h1 style={{ fontSize: "28px", fontWeight: "bold", marginBottom: "8px" }}>
+    <div
+      style={{
+        padding: "24px",
+        maxWidth: "600px",
+        margin: "0 auto",
+        backgroundColor: "transparent",
+      }}
+    >
+      <h1
+        style={{
+          fontSize: "28px",
+          fontWeight: "bold",
+          marginBottom: "8px",
+          color: "#FFFFFF",
+        }}
+      >
         무서운 썰 생성기
       </h1>
 
-      <p style={{ fontSize: "14px", color: "#6B7684", marginBottom: "24px" }}>
+      <p style={{ fontSize: "14px", color: "#c0c7cf", marginBottom: "24px" }}>
         스토리에 포함할 키워드를 입력하세요 (최대 10개)
       </p>
 
@@ -36,30 +53,36 @@ export const IntroScreen = ({
         style={{
           marginBottom: "16px",
           display: "flex",
-          gap: "5px",
+          gap: "8px",
           alignItems: "center",
         }}
       >
         <div
           style={{
+            display: "flex",
+            flexDirection: "column",
             flex: 1,
             alignItems: "center",
-            display: "flex",
             justifyContent: "start",
           }}
         >
           <TextField
-            variant="box"
+            variant="line"
             value={currentKeyword}
             onChange={(e) => onKeywordChange(e.target.value)}
             onKeyDown={onKeyPress}
             placeholder="예: 학교 괴담"
             disabled={keywords.length >= 10}
-            style={{ width: "100%" }}
+            style={{
+              color: "#FFFFFF",
+              border: "2px solid #fff",
+              borderRadius: 6,
+              padding: "10px",
+            }}
           />
         </div>
 
-        <Button
+        <button
           onClick={onAddKeyword}
           disabled={!currentKeyword.trim() || keywords.length >= 10}
           style={{
@@ -68,23 +91,27 @@ export const IntroScreen = ({
             fontSize: "14px",
             minWidth: 120,
             height: 40,
-            borderRadius: 5,
+            borderRadius: 6,
+            backgroundColor: "#2b3240",
+            color: "#FFFFFF",
+            border: "1px solid #3a4149",
           }}
         >
           키워드 추가
-        </Button>
+        </button>
       </div>
 
       {/* 에러 메시지 */}
       {error && (
         <div
           style={{
-            color: "#FF4D4F",
+            color: "#FFD2D6",
             fontSize: "14px",
             marginBottom: "16px",
             padding: "8px 12px",
-            backgroundColor: "#FFF1F0",
-            borderRadius: "5px",
+            backgroundColor: "#2a1114",
+            borderRadius: "6px",
+            border: "1px solid #4b1518",
           }}
         >
           {error}
@@ -110,10 +137,11 @@ export const IntroScreen = ({
                   alignItems: "center",
                   gap: "6px",
                   padding: "6px 12px",
-                  backgroundColor: "#F5F6F8",
+                  backgroundColor: "#0F1720",
                   borderRadius: "16px",
                   fontSize: "14px",
-                  color: "#191F28",
+                  color: "#cbd5e1",
+                  border: "1px solid #20262b",
                 }}
               >
                 <span>{keyword}</span>
@@ -136,7 +164,7 @@ export const IntroScreen = ({
               </div>
             ))}
           </div>
-          <p style={{ fontSize: "13px", color: "#6B7684" }}>
+          <p style={{ fontSize: "13px", color: "#9aa6b2" }}>
             {keywords.length}/10개의 키워드가 추가되었습니다
           </p>
         </div>
@@ -147,31 +175,59 @@ export const IntroScreen = ({
         style={{
           marginBottom: "16px",
           fontSize: "13px",
-          color: "#6B7684",
+          color: "#9aa6b2",
           lineHeight: 1.5,
         }}
       >
         <p style={{ margin: "4px 0" }}>
-          1. 키워드를 입력하고 엔터를 눌러 키워드를 추가해보세요.
+          1. 키워드를 입력하고 키워드를 추가해보세요.
         </p>
         <p style={{ margin: "4px 0" }}>
-          2. 스토리 생성하기 버튼을 눌러 무서운 썰을 만들어보세요!
+          2. 스토리 생성하기 버튼을 클릭해 무서운 썰을 만들어보세요!
         </p>
       </div>
 
       {/* 스토리 생성 버튼 */}
-      <Button
-        onClick={onSubmit}
+      <button
+        onClick={() => setIsModalOpen(true)}
         disabled={keywords.length === 0}
         style={{
           width: "100%",
           padding: "12px",
           fontSize: "16px",
-          borderRadius: 5,
+          borderRadius: 6,
+          backgroundColor: "#7B1424",
+          color: "#FFFFFF",
+          border: "1px solid #8f1f2f",
         }}
       >
         스토리 생성하기
-      </Button>
+      </button>
+      <Modal open={isModalOpen} onOpenChange={() => setIsModalOpen(false)}>
+        <Modal.Overlay />
+        <Modal.Content>
+          <div
+            style={{
+              backgroundColor: "black",
+              display: "flex",
+              flexDirection: "column",
+              gap: "12px",
+              padding: "24px",
+              textAlign: "center",
+            }}
+          >
+            <p style={{ color: "white" }}>
+              광고 시청 후 오싹한 썰을 만들어보세요!
+            </p>
+            <Button color="primary" onClick={onSubmit}>
+              썰 만들기
+            </Button>
+            <Button color="dark" onClick={() => setIsModalOpen(false)}>
+              닫기
+            </Button>
+          </div>
+        </Modal.Content>
+      </Modal>
     </div>
   );
 };
