@@ -9,6 +9,8 @@
   width: 100%;
   min-height: 100vh; /* full viewport height so footer sticks to bottom if any */
   box-sizing: border-box;
+  background-color: #1a1a1a;
+  color: #fff;
 }
 
 a {
