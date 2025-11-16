@@ -1,5 +1,4 @@
 import { Navigate, Route, Routes } from "react-router-dom";
-import ProfilePage from "./pages/ProfilePage";
 import StoryGeneratePage from "./pages/StoryGeneratePage";
 
 const DEFAULT_PATH = "/generate";
